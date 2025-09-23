@@ -7,3 +7,5 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/', \App\Livewire\HomeComponent::class)->name('home');
+Route::get('/category', \App\Livewire\Product\CategoryComponent::class)->name('category');
+Route::get('/product', \App\Livewire\Product\ProductComponent::class)->name('product');
