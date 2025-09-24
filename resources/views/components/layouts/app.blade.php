@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Page Title' }}</title>
+    <title>{{ $title ?? 'Shop' }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/owlcarousel/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/owlcarousel/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">
+{{--    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">--}}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
@@ -179,15 +179,7 @@
                         </ul>
                     </div>
                 </div>
-
-                <div>
-                    <button class="btn p-1" id="cart-open" type="button" data-bs-toggle="offcanvas2"
-                            data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span class="badge text-bg-warning cart-badge bg-warning rounded-circle">5</span>
-                    </button>
-                </div>
-
+                <livewire:cart.cart-icon-component />
             </div>
         </nav>
     </div>
