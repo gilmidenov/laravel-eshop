@@ -3,7 +3,7 @@
             data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
         <i class="fa-solid fa-cart-shopping"></i>
         <span class="badge text-bg-warning cart-badge bg-warning rounded-circle">
-            {{\App\Helpers\Cart\Cart::getCartQuantityItems()}}
+            {{\App\Helpers\Cart\Cart::getCartQuantityTotal()}}
         </span>
     </button>
 </div>

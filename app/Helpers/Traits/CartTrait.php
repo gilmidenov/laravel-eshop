@@ -16,7 +16,24 @@ trait CartTrait
             $quantity = 1;
         }
 
-        $res = Cart::addToCart($productId, $quantity);
+        if (Cart::addToCart($productId, $quantity)) {
+            $this->js("toastr.success('Product added to card successfully!')");
+            $this->dispatch('cart-updated');
+        } else {
+            $this->js("toastr.error('Something went wrong!')");
+        }
+    }
+
+
+    public function removeFromCart(int $productId)
+    {
+        if (Cart::removeProductFromCart($productId)) {
+            $this->js("toastr.success('Product removed from card successfully!')");
+            $this->dispatch('cart-updated');
+        }else{
+            $this->js("toastr.error('Something went wrong!')");
+        }
+
     }
 }
 
