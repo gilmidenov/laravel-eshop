@@ -131,51 +131,13 @@
                             <li class="nav-item">
                                 <a wire:navigate class="nav-link active" aria-current="page" href=" {{route('home')}}">Home</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
-                            <li class="nav-item">
-                                <a wire:navigate class="nav-link" href="{{ route('category') }}">Category</a>
-                            </li>
-                            <li class="nav-item">
-                                <a wire:navigate class="nav-link" href="{{route('product') }}">Product</a>
-                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                    aria-expanded="false" data-bs-auto-close="outside">
                                     Catalog
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" href="category.html">Shoes</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="category.html">Jeans</a>
-                                    </li>
-                                    <li class="nav-item dropend">
-                                        <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown"
-                                           data-bs-auto-close="outside">Sportswear</a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <a class="dropdown-item" href="category.html">Men's Sportswear</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="category.html">Women's Sportswear</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="category.html">Baby's Sportswear</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="category.html">Coat</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="category.html">Shirts</a>
-                                    </li>
+                                    {!! \App\Helpers\Category\Category::getMenu('incs.menu-tpl', 'categories_html') !!}
                                 </ul>
                             </li>
                         </ul>
@@ -185,7 +147,6 @@
             </div>
         </nav>
     </div>
-    <!-- ./header-bottom -->
 
     <livewire:cart.cart-modal-component />
     <main class="main">
@@ -198,10 +159,7 @@
                 <div class="col-md-3 col-6">
                     <h4>Information</h4>
                     <ul class="list-unstyled">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="#">Payment</a></li>
-                        <li><a href="#">Delivery</a></li>
-                        <li><a href="#">Contacts</a></li>
+                        <li><a href="{{ route('home') }}">Home</a></li>
                     </ul>
                 </div>
 

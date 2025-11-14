@@ -36,26 +36,3 @@ trait CartTrait
 
     }
 }
-
-/*
-
-'cart' => [
-    1 => [
-        'title' => '',
-        'slug' => '',
-        'image' => '',
-        'price' => '',
-        'old_price' => '',
-        'quantity' => 4,
-    ],
-    5 => [
-        'title' => '',
-        'slug' => '',
-        'image' => '',
-        'price' => '',
-        'old_price' => '',
-        'quantity' => 3,
-    ],
-]
-
- * */
