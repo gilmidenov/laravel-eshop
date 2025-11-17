@@ -3,7 +3,6 @@
 namespace App\Helpers\Category;
 
 use App\Helpers\Container;
-use staabm\SideEffectsDetector\SideEffect;
 
 class Category
 {
@@ -85,5 +84,23 @@ class Category
         }
 
         return $ids;
+    }
+
+    public static function getBreadcrumbs(int $categoryId)
+    {
+        $categories = self::getCategories();
+
+        $breadcrumbs = [];
+        foreach ($categories as $item) {
+            if (isset($categories[$categoryId])) {
+                $breadcrumbs[$categories[$categoryId]['slug']] = $categories[$categoryId]['title'];
+                $categoryId = $categories[$categoryId]['parent_id'];
+            } else {
+                break;
+            }
+        }
+
+        return array_reverse($breadcrumbs);
+
     }
 }

@@ -4,9 +4,17 @@
             <div class="col-12">
                 <nav class="breadcrumbs">
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="#">Shop</a></li>
-                        <li><span>{{ $category->title }}</span></li>
+                        <li><a href="{{ route('home') }}" wire:navigate>Home</a></li>
+
+                        @foreach($breadcrumbs as $breadcrumbs_slug => $breadcrumbs_title)
+                            @if($loop->last)
+                                <li><span>{{ $breadcrumbs_title }}</span></li>
+                            @else
+                                <li><a href="{{ route('category', $breadcrumbs_slug) }}">{{ $breadcrumbs_title }}</a></li>
+                            @endif
+                        @endforeach
+
+
                     </ul>
                 </nav>
             </div>
