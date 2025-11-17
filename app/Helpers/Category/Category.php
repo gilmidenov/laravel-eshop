@@ -73,7 +73,7 @@ class Category
         return ob_get_clean();
     }
 
-    public static function getIds(int $categoryId)
+    public static function getIds(int $categoryId): string
     {
         $categories = self::getCategories();
         $ids = '';

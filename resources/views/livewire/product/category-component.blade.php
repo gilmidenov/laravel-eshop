@@ -6,14 +6,21 @@
                     <ul>
                         <li><a href="index.html">Home</a></li>
                         <li><a href="#">Shop</a></li>
-                        <li><span>Category Name</span></li>
+                        <li><span>{{ $category->title }}</span></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container position-relative">
+
+        <div class="update-loading" wire:loading wire:target.except="addToCart">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-3 col-md-4">
                 <div class="sidebar">
@@ -150,319 +157,64 @@
                 </div>
             </div>
 
-            <div class="col-lg-9 col-md-8">
+            <div class="col-lg-9 col-md-8" id="products">
                 <div class="row mb-3">
                     <div class="col-12">
-                        <h1 class="section-title h3"><span>Category Name</span></h1>
+                        <h1 class="section-title h3"><span>{{ $category->title }}</span></h1>
                     </div>
                     <div class="col-4 col-sm-2">
                         <img src="assets/img/products/8.jpg" alt="" class="img-thumbnail">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Sort By:</span>
-                            <select class="form-select" aria-label="Sort by:">
-                                <option selected>Default</option>
-                                <option value="1">Name (a-z)</option>
-                                <option value="2">Name (z-a)</option>
-                                <option value="3">Price (low &gt; high)</option>
-                                <option value="4">Price (high &gt; low)</option>
-                            </select>
+                @if(count($products))
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Sort By:</span>
+                                <select class="form-select" aria-label="Sort by:" wire:change="changeSort" wire:model="sort">
+                                    @foreach($sortList as $key => $item)
+                                        <option value="{{ $key }}"
+                                                @if($key == $sort) selected @endif
+                                                wire:key="{{ $key }}">{{ $item['title'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Show:</span>
-                            <select class="form-select" aria-label="Show:">
-                                <option selected>9</option>
-                                <option value="15">15</option>
-                                <option value="30">30</option>
-                                <option value="45">45</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Show:</span>
+                                <select class="form-select" aria-label="Show:" wire:change="changeLimit" wire:model="limit">
+                                    @foreach($limitList as $key => $item)
+                                        <option value="{{ $item }}"
+                                                @if($key == $limit) selected @endif
+                                                wire:key="{{ $key }}">{{$item}}
+                                        </option>
+                                    @endforeach
 
-                <div class="row">
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
-                                <div class="offer-new">New</div>
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/1.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 1 Lorem ipsum dolor, sit amet consectetur
-                                        adipisicing.</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum dolor, sit amet consectetur adipisicing
-                                    elit.
-                                    Placeat, aperiam!</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        <small>$70</small>
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
+                    <div class="row">
+                        @foreach($products as $product)
+                            <div class="col-lg-4 col-sm-6 mb-3" wire:key="{{ $product->id }}">
+                                @include('incs.product-card')
                             </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/2.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 2</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum dolor</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ $products->links(data: ['scrollTo' => '#products']) }}
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <!-- <div class="offer-hit">Hit</div>
-                                <div class="offer-new">New</div> -->
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/3.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 3 Lorem ipsum</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        $100
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/4.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 4</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum dolor</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        <small>$70</small>
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
-                                <div class="offer-new">New</div>
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/5.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 5 Lorem ipsum dolor, sit amet consectetur
-                                        adipisicing.</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum dolor, sit amet consectetur adipisicing
-                                    elit.
-                                    Placeat, aperiam!</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        <small>$70</small>
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
-                                <div class="offer-new">New</div>
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/6.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 6</a>
-                                </h4>
-                                <p class="product-excerpt"></p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        <small>$70</small>
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
-                                <div class="offer-new">New</div>
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/7.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 7</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum dolor, sit amet consectetur adipisicing
-                                    elit.
-                                    Placeat, aperiam!</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        <small>$70</small>
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
-                                <div class="offer-new">New</div>
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/8.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 8 Lorem</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum dolor</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        <small>$70</small>
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-sm-6 mb-3">
-                        <div class="product-card">
-                            <div class="product-card-offer">
-                                <div class="offer-hit">Hit</div>
-                                <div class="offer-new">New</div>
-                            </div>
-                            <div class="product-thumb">
-                                <a href="product.html"><img src="assets/img/products/1.jpg" alt=""></a>
-                            </div>
-                            <div class="product-details">
-                                <h4>
-                                    <a href="product.html">Product 1 Lorem ipsum dolor, sit amet consectetur
-                                        adipisicing.</a>
-                                </h4>
-                                <p class="product-excerpt">Lorem ipsum dolor, sit amet consectetur adipisicing
-                                    elit.
-                                    Placeat, aperiam!</p>
-                                <div class="product-bottom-details d-flex justify-content-between">
-                                    <div class="product-price">
-                                        <small>$70</small>
-                                        $65
-                                    </div>
-                                    <div class="product-links">
-                                        <a href="#" class="btn btn-outline-secondary add-to-cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active" aria-current="page"><a class="page-link"
-                                                                                    href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+                @else
+                    <p>No products found...</p>
+                @endif
 
             </div>
         </div>
