@@ -5,6 +5,7 @@ namespace App\Livewire\Product;
 use App\Helpers\Traits\CartTrait;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -31,6 +32,9 @@ class CategoryComponent extends Component
 
     public array $limitList = [3, 6, 9, 12];
 
+    #[Url]
+    public array $selected_filters = [];
+
     public function mount($slug)
     {
         $this->slug = $slug;
@@ -52,6 +56,18 @@ class CategoryComponent extends Component
         $category = Category::query()->where('slug', '=', $this->slug)->firstOrFail();
         $ids      = \App\Helpers\Category\Category::getIds($category->id) . $category->id;
 
+        $categoryFilters  = DB::table('category_filters')
+            ->select('category_filters.filter_group_id', 'filter_groups.title', 'filters.id as filter_id', 'filters.title as filter_title')
+            ->join('filter_groups', 'category_filters.filter_group_id', '=', 'filter_groups.id')
+            ->join('filters', 'filters.filter_group_id', '=', 'filter_groups.id')
+            ->whereIn('category_filters.category_id', explode(',', $ids))
+            ->get();
+
+        $filterGroups = [];
+        foreach ($categoryFilters as $filter) {
+            $filterGroups[$filter->filter_group_id][] = $filter;
+        }
+
         $products = Product::query()
             ->whereIn('category_id', explode(',', $ids))
             ->orderBy($this->sortList[$this->sort]['order_field'], $this->sortList[$this->sort]['order_direction'])
@@ -63,6 +79,7 @@ class CategoryComponent extends Component
             'products'   => $products,
             'category'   => $category,
             'breadcrumbs' => $breadcrumbs,
+            'filter_groups' => $filterGroups,
         ]);
     }
 }
