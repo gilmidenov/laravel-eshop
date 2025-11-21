@@ -5,6 +5,7 @@ namespace App\Livewire\Product;
 use App\Helpers\Traits\CartTrait;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -40,6 +41,14 @@ class CategoryComponent extends Component
         $this->slug = $slug;
     }
 
+    public function updated($property)
+    {
+        $property = explode('.', $property);
+        if ($property[0] == 'selected_filters') {
+            $this->resetPage();
+        }
+    }
+
     public function changeSort()
     {
         $this->sort = isset($this->sortList[$this->sort]) ? $this->sort : 'default';
@@ -68,8 +77,24 @@ class CategoryComponent extends Component
             $filterGroups[$filter->filter_group_id][] = $filter;
         }
 
+        if($this->selected_filters) {
+            $cntFilterGroups = DB::table('filters')
+                ->select(DB::raw('count(distinct filter_group_id) as cnt'))
+                ->whereIn('id', $this->selected_filters)
+                ->value('cnt');
+        } else {
+            $cntFilterGroups = 1;
+        }
+
         $products = Product::query()
             ->whereIn('category_id', explode(',', $ids))
+            ->when($this->selected_filters, function (Builder $query) use ($cntFilterGroups) {
+                $query->leftJoin(DB::raw('filter_products FORCE INDEX FOR JOIN (filter_id)'),
+                    'filter_products.product_id', '=', 'products.id')
+                    ->whereIn('filter_products.filter_id', $this->selected_filters)
+                    ->groupBy('id')
+                    ->havingRaw("count(distinct filter_products.filter_group_id) >= $cntFilterGroups");
+            })
             ->orderBy($this->sortList[$this->sort]['order_field'], $this->sortList[$this->sort]['order_direction'])
             ->paginate($this->limit);
 

@@ -5,7 +5,6 @@
                 <nav class="breadcrumbs">
                     <ul>
                         <li><a href="{{ route('home') }}" wire:navigate>Home</a></li>
-
                         @foreach($breadcrumbs as $breadcrumbs_slug => $breadcrumbs_title)
                             @if($loop->last)
                                 <li><span>{{ $breadcrumbs_title }}</span></li>
@@ -13,8 +12,6 @@
                                 <li><a href="{{ route('category', $breadcrumbs_slug) }}">{{ $breadcrumbs_title }}</a></li>
                             @endif
                         @endforeach
-
-
                     </ul>
                 </nav>
             </div>
@@ -66,7 +63,7 @@
                         <h1 class="section-title h3"><span>{{ $category->title }}</span></h1>
                     </div>
                     <div class="col-4 col-sm-2">
-                        <img src="assets/img/products/8.jpg" alt="" class="img-thumbnail">
+{{--                        <img src="assets/img/products/8.jpg" alt="" class="img-thumbnail">--}}
                     </div>
                 </div>
 
